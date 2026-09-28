@@ -1,0 +1,56 @@
+<div class="home-container">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <h1 class="greeting">Hola, {{ userName }}</h1>
+        <p class="welcome-message">Bienvenido a la Escuela de Capacitación Ministerial</p>
+    </div>
+
+    <!-- Mis Cursos Section -->
+    <div class="start-section">
+        <h2 class="section-title">Mis Cursos</h2>
+    </div>
+
+    <div class="courses-section">
+        <div class="courses-list" *ngIf="studentSeasons.length > 0; else noCourses">
+            <div class="course-card" *ngFor="let season of studentSeasons">
+                <!-- Level and Period -->
+                <div class="course-header">
+                    <span class="course-level">
+                        {{ getLevelText(season.stud_season.seas_course.cour_level) }} - {{
+                        season.stud_season.seas_period.peri_description }}
+                    </span>
+                    <span class="course-type" [ngClass]="getStatusClass(season)">
+                        {{ getStatusText(season) }}
+                    </span>
+                </div>
+
+                <!-- Course Name -->
+                <h3 class="course-name">{{ season.stud_season.seas_course.cour_description }}</h3>
+
+                <!-- Teacher Name -->
+                <p class="course-teacher">{{ getTeacherDisplayName(season.stud_season.seas_teacher) }}</p>
+
+                <!-- Mode and Schedule -->
+                <div class="course-info">
+                    <div class="info-item">
+                        <i class='bx' [ngClass]="{
+                                'bx-buildings': season.stud_season.seas_mode.mode_name === 'Presencial',
+                                'bx-laptop': season.stud_season.seas_mode.mode_name === 'Virtual',
+                                'bx-video': season.stud_season.seas_mode.mode_name === 'Online'
+                            }">
+                        </i>
+                        <span>{{ season.stud_season.seas_mode.mode_name }}</span>
+                    </div>
+                    <div class="info-item">
+                        <i class='bx bx-time'></i>
+                        <span>{{ season.stud_season.seas_schedule.sche_starttime }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ng-template #noCourses>
+            <p class="no-courses-message">No tienes cursos activos en este momento.</p>
+        </ng-template>
+    </div>
+</div>

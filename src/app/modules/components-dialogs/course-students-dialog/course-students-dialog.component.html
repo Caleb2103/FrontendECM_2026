@@ -1,0 +1,81 @@
+<div class="students-dialog-container">
+  <!-- Header -->
+  <div class="dialog-header">
+    <div class="header-info">
+      <i class='bx bxs-book-content'></i>
+      <div class="header-text">
+        <h2 mat-dialog-title class="dialog-title">{{ data.courseGroup.course.cour_description }}</h2>
+        <p class="dialog-subtitle">
+          {{ data.courseGroup.schedule.sche_description }} - {{ data.mode_name }}
+        </p>
+      </div>
+    </div>
+    <button class="close-button" (click)="closeDialog()" aria-label="Cerrar">
+      <i class='bx bx-x'></i>
+    </button>
+  </div>
+
+  <mat-dialog-content>
+    <!-- Students Count -->
+    <div class="students-count">
+      <span>{{ data.courseGroup.students.length }} estudiante(s) inscrito(s)</span>
+    </div>
+
+    <!-- Students List -->
+    <div class="students-list">
+      <div class="student-card" *ngFor="let student of data.courseGroup.students">
+        <!-- Student Info -->
+        <div class="student-info">
+          <div class="student-avatar">
+            <i class='bx bxs-user-circle'></i>
+          </div>
+          <div class="student-details">
+            <h3 class="student-name">
+              {{ student.stud_member.memb_name }} {{ student.stud_member.memb_surname }}
+            </h3>
+            <div class="student-meta">
+              <span class="meta-item">
+                <i class='bx bx-id-card'></i>
+                {{ student.stud_member.memb_dni }}
+              </span>
+              <span class="meta-item">
+                <i class='bx bx-phone'></i>
+                {{ student.stud_member.memb_mobil }}
+              </span>
+              <span class="meta-item" *ngIf="student.stud_member.memb_zone?.zone_name">
+                <i class='bx bx-map'></i>
+                {{ student.stud_member.memb_zone.zone_name }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="student-actions">
+          <button
+            class="action-btn btn-transfer"
+            (click)="openTransferDialog(student)"
+            matTooltip="Transferir a otro curso"
+            aria-label="Transferir a otro curso">
+            <i class='bx bx-transfer'></i>
+            <span>Transferir</span>
+          </button>
+          <button
+            class="action-btn btn-cancel"
+            (click)="cancelInscription(student)"
+            matTooltip="Anular inscripción"
+            aria-label="Anular inscripción">
+            <i class='bx bx-x-circle'></i>
+            <span>Anular</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="data.courseGroup.students.length === 0">
+      <i class='bx bx-user-x'></i>
+      <p>No hay estudiantes inscritos en este curso</p>
+    </div>
+  </mat-dialog-content>
+</div>

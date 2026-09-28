@@ -1,0 +1,46 @@
+<div class="transfer-dialog-container">
+  <h2 mat-dialog-title>Transferir Estudiante</h2>
+
+  <mat-dialog-content>
+    <div class="student-info-box">
+      <i class='bx bxs-user-circle'></i>
+      <div>
+        <h3>{{ data.student.stud_member.memb_name }} {{ data.student.stud_member.memb_surname }}</h3>
+        <p>{{ data.student.stud_member.memb_dni }}</p>
+      </div>
+    </div>
+
+    <div class="transfer-info">
+      <div class="current-course">
+        <label>Curso actual:</label>
+        <p>{{ data.currentCourse.course.cour_description.toUpperCase() }}</p>
+        <span class="course-meta">
+          {{ (data.currentCourse.schedule.sche_description || 'No disponible').toUpperCase() }} -
+          {{ (data.currentCourse.schedule.sche_starttime || 'Online').toUpperCase() }}
+        </span>
+      </div>
+
+      <div class="new-course">
+        <label>Transferir a:</label>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Selecciona un curso</mat-label>
+          <mat-select [(value)]="selectedSeason">
+            <mat-option *ngFor="let season of availableSeasons" [value]="season">
+              {{ formatSeasonDisplay(season) }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" style="gap:1rem; margin-bottom: 1rem;">
+    <button mat-button (click)="onCancel()" class="btn-cancel">
+      Cancelar
+    </button>
+    <button mat-raised-button (click)="onConfirm()" [disabled]="!selectedSeason || loading" class="btn-transfer">
+      <span *ngIf="!loading">Transferir</span>
+      <span *ngIf="loading">Transfiriendo...</span>
+    </button>
+  </mat-dialog-actions>
+</div>

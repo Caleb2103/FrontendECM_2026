@@ -1,0 +1,83 @@
+<div class="payment-dialog-container">
+  <!-- Header -->
+  <div class="dialog-header">
+    <h2 mat-dialog-title class="dialog-title">Confirmación de Inscripción</h2>
+    <button class="close-button" (click)="closeDialog()" aria-label="Cerrar">
+      <i class='bx bx-x'></i>
+    </button>
+  </div>
+  
+  <!-- STEP 1: Payment and Voucher Upload -->
+  <div class="dialog-content" *ngIf="currentStep === 1" [@fadeIn]>
+    <div class="payment-section">
+      <h3 class="section-title">Realiza el pago de inscripción</h3>
+      <p class="section-subtitle">Escanea el código QR o realiza la transferencia y adjunta tu comprobante de pago</p>
+
+      <div class="payment-content">
+        <!-- Left: QR Code -->
+        <div class="qr-section">
+          <div class="qr-container">
+            <img src="assets/qr-yape.png" alt="QR de Pago" class="qr-image" />
+          </div>
+          <div class="payment-info">
+            <p class="payment-amount">Monto: <strong>S/ 5.00</strong></p>
+          </div>
+        </div>
+
+        <!-- Right: Voucher Upload -->
+        <div class="voucher-section">
+          <h4 class="voucher-title">Sube tu comprobante de pago</h4>
+
+          <!-- File Input (Hidden) -->
+          <input 
+            type="file" 
+            #fileInput 
+            accept="image/*" 
+            (change)="onFileSelected($event)" 
+            style="display: none" 
+          />
+
+          <!-- Upload Area -->
+          <div class="upload-area" *ngIf="!voucherPreview" (click)="fileInput.click()">
+            <i class='bx bx-cloud-upload upload-icon'></i>
+            <p class="upload-text">Haz clic para subir imagen</p>
+            <p class="upload-hint">JPG, PNG (Máx. 5MB)</p>
+          </div>
+
+          <!-- Image Preview -->
+          <div class="voucher-preview" *ngIf="voucherPreview">
+            <img [src]="voucherPreview" alt="Vista previa del voucher" />
+            <button class="change-image-button" (click)="fileInput.click()">
+              <i class='bx bx-refresh'></i>
+              Cambiar imagen
+            </button>
+          </div>
+
+          <!-- Operation Code Input -->
+          <div class="form-group">
+            <label class="form-label">Código de operación</label>
+            <input 
+              type="text" 
+              class="form-input" 
+              placeholder="Ingresa el código de operación"
+              [(ngModel)]="operationCode" 
+              maxlength="20" 
+            />
+          </div>
+
+          <!-- Error Message -->
+          <p class="form-error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+          <!-- Submit Button -->
+          <button
+            class="btn-submit"
+            (click)="confirmInscription()"
+            [disabled]="!voucherFile || !operationCode || loading">
+            <i class='bx' [ngClass]="loading ? 'bx-loader-alt bx-spin' : 'bx-check-circle'"></i>
+            {{ loading ? 'Enviando...' : 'Enviar comprobante y finalizar' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

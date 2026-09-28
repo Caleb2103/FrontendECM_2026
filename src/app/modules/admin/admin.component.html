@@ -1,0 +1,108 @@
+<div class="content">
+  <!-- Header -->
+  <div class="admin-header">
+    <div class="admin-header-left">
+      <div>
+        <h1 class="admin-title">Admin</h1>
+        <p class="admin-subtitle">Gestión de contenidos por modalidad</p>
+      </div>
+    </div>
+    <button class="btn-download-all" (click)="exportAllStudents()" [disabled]="loading || groupedStudents.length === 0" aria-label="Descargar todo">
+      <i class='bx bx-download'></i>
+      <span>Descargar Todo</span>
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando estudiantes...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="error-container">
+    <i class='bx bx-error-circle'></i>
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Grupos de estudiantes por modalidad -->
+  <div class="admin-content" *ngIf="!loading && !error">
+
+    <!-- Accordion por cada modalidad -->
+    <div class="accordion-group" *ngFor="let modeGroup of groupedStudents">
+      <div
+        class="accordion-header"
+        role="button"
+        tabindex="0"
+        [id]="getAccordionId(modeGroup.mode_id) + '-header'"
+        [attr.aria-expanded]="activeAccordion === getAccordionId(modeGroup.mode_id)"
+        [attr.aria-controls]="getAccordionId(modeGroup.mode_id) + '-content'"
+        (click)="toggleAccordion(getAccordionId(modeGroup.mode_id))"
+        (keydown.enter)="toggleAccordion(getAccordionId(modeGroup.mode_id))"
+        (keydown.space)="$event.preventDefault(); toggleAccordion(getAccordionId(modeGroup.mode_id))"
+      >
+        <div class="accordion-title">
+          <i class='bx' [ngClass]="{
+            'bxs-video': modeGroup.mode_name === 'Virtual',
+            'bxs-home': modeGroup.mode_name === 'Presencial',
+            'bxs-customize': modeGroup.mode_name !== 'Virtual' && modeGroup.mode_name !== 'Presencial'
+          }"></i>
+          <span>{{ modeGroup.mode_name }}</span>
+          <span class="badge">{{ modeGroup.courses.length }} curso(s)</span>
+        </div>
+        <i class='bx' [ngClass]="activeAccordion === getAccordionId(modeGroup.mode_id) ? 'bx-chevron-up' : 'bx-chevron-down'"></i>
+      </div>
+
+      <div
+        class="accordion-content"
+        [id]="getAccordionId(modeGroup.mode_id) + '-content'"
+        role="region"
+        [attr.aria-labelledby]="getAccordionId(modeGroup.mode_id) + '-header'"
+        [ngClass]="{'active': activeAccordion === getAccordionId(modeGroup.mode_id)}"
+      >
+
+        <!-- Lista de cursos/horarios dentro de cada modalidad -->
+        <div class="course-list">
+          <div class="course-item" *ngFor="let courseGroup of modeGroup.courses">
+            <div class="course-header">
+              <div class="course-info" (click)="openCourseStudentsDialog(courseGroup, modeGroup.mode_name)">
+                <i class='bx bxs-book-content'></i>
+                <span class="course-title">{{ courseGroup.key }}</span>
+              </div>
+              <div class="course-actions">
+                <span class="student-count">{{ courseGroup.students.length }} estudiante(s)</span>
+                <button class="btn-download-course" (click)="exportCourseStudents(courseGroup, modeGroup.mode_name)" title="Descargar lista Excel" [attr.aria-label]="'Descargar lista de ' + courseGroup.key">
+                  <i class='bx bx-download'></i>
+                </button>
+              </div>
+            </div>
+
+            <div
+              class="students-preview"
+              role="button"
+              tabindex="0"
+              [attr.aria-label]="'Ver estudiantes de ' + courseGroup.key"
+              (click)="openCourseStudentsDialog(courseGroup, modeGroup.mode_name)"
+              (keydown.enter)="openCourseStudentsDialog(courseGroup, modeGroup.mode_name)"
+              (keydown.space)="$event.preventDefault(); openCourseStudentsDialog(courseGroup, modeGroup.mode_name)"
+            >
+              <div class="student-chip" *ngFor="let student of courseGroup.students.slice(0, 3)">
+                {{ student.stud_member.memb_name }} {{ student.stud_member.memb_surname }}
+              </div>
+              <span class="more-students" *ngIf="courseGroup.students.length > 3">
+                +{{ courseGroup.students.length - 3 }} más
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="groupedStudents.length === 0">
+      <i class='bx bx-folder-open'></i>
+      <p>No hay estudiantes en el período activo</p>
+    </div>
+
+  </div>
+</div>

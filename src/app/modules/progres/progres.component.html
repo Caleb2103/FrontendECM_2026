@@ -1,0 +1,45 @@
+<div class="content">
+  <div class="page-header">
+    <h1 class="page-title">Progreso</h1>
+    <p class="page-subtitle">Avance por cada nivel de la ECM</p>
+  </div>
+
+  <div class="spinner-container" *ngIf="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <ng-container *ngIf="!loading">
+
+    <!-- ── Tarjetas de % por nivel ──────────────────────────────── -->
+    <div class="level-cards">
+      <div class="level-card" *ngFor="let level of levelProgress">
+        <div class="level-card-header">
+          <h2 class="level-card-title">{{ level.label }}</h2>
+          <span class="level-card-pct">{{ level.percentage }}%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" [style.width.%]="level.percentage"></div>
+        </div>
+        <p class="level-card-detail">{{ level.completedCount }} de {{ level.totalCount }} cursos completados</p>
+      </div>
+    </div>
+
+    <!-- ── Detalle de cursos por nivel ──────────────────────────── -->
+    <h2 class="section-title">Detalle de cursos</h2>
+    <div class="courses-detail">
+      <div class="courses-detail-card" *ngFor="let level of levelProgress">
+        <h3 class="courses-detail-title">{{ level.label }}</h3>
+        <ul class="course-list">
+          <li class="course-item" *ngFor="let course of level.courses">
+            <span class="course-description">{{ course.cour_description }}</span>
+            <i
+              class="bx completion-icon"
+              [ngClass]="isCourseCompleted(course) ? 'bxs-check-circle completed' : 'bx-circle'"
+            ></i>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </ng-container>
+</div>

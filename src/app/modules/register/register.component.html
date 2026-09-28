@@ -1,0 +1,239 @@
+
+<div class="container">
+  <div class="left-side">
+    <div class="welcome-text">
+      <h3>Bienvenido</h3>
+    </div>
+    <div class="school-text">
+      <h1>Escuela de<br />Capacitación Ministerial</h1>
+    </div>
+  </div>
+
+  <div class="right-side" [@slideRight]>
+    <!-- Mobile Stepper Header -->
+    <div class="mobile-header" *ngIf="isMobileView">
+      <button class="back-button" (click)="handleBackButton()">
+        <i class='bx bx-chevron-left'></i>
+      </button>
+      <h1 class="step-title">{{ getStepTitle() }}</h1>
+    </div>
+
+    <!-- STEP 1: Personal Data Form -->
+    <div class="step-content" *ngIf="currentStep === 1" [@stepTransition]>
+      <form #loginForm="ngForm" *ngIf="!isMobileView" (ngSubmit)="openDialog()">
+        <h2 class="subtitle-text">New in our church?</h2>
+        <h2 class="subtitle-text">Register your information</h2>
+        <div class="input-container">
+          <input type="text" id="nombres" name="nombres" placeholder="Nombres" [(ngModel)]="nombres" required
+            autocomplete="off" />
+        </div>
+        <div class="input-container">
+          <input type="text" id="apellidos" name="apellidos" placeholder="Apellidos" [(ngModel)]="apellidos" required
+            autocomplete="off" />
+        </div>
+
+        <div class="input-row">
+          <div class="input-container">
+            <mat-select id="tipoDocumento" name="tipoDocumento" [(ngModel)]="tipoDocumento" required>
+              <mat-option value="" disabled selected>Tipo de Documento</mat-option>
+              <mat-option *ngFor="let opt of tipoDocumentoOptions" [value]="opt.value">{{ opt.label }}</mat-option>
+            </mat-select>
+          </div>
+          <div class="input-container">
+            <input type="text" id="documento" name="documento" placeholder="Documento" [(ngModel)]="documento"
+              pattern="[0-9]{8}" required autocomplete="off" inputmode="numeric" />
+          </div>
+        </div>
+        <div class="input-container">
+          <input type="date" id="fechaCumpleanos" name="fechaCumpleanos" placeholder="Fecha de cumpleaños"
+            [(ngModel)]="fechaCumpleanos" required />
+        </div>
+
+        <div class="input-container">
+          <mat-select id="zona" name="zona" [(ngModel)]="zona"
+            placeholder="Selecciona tu zona o congregación" required>
+            <mat-option value="" disabled selected>Selecciona tu zona o congregación</mat-option>
+            <mat-option *ngFor="let opt of zonaOptions" [value]="opt.value">{{ opt.label }}</mat-option>
+          </mat-select>
+        </div>
+
+        <div class="input-container">
+          <input type="tel" id="numeroCelular" name="numeroCelular" placeholder="Número de celular"
+            [(ngModel)]="numeroCelular" required pattern="[0-9]{9}" autocomplete="off" #numeroCelularInput="ngModel" />
+        </div>
+        <div *ngIf="numeroCelularInput.invalid && (numeroCelularInput.dirty || numeroCelularInput.touched)">
+          <div class="error-telefono" *ngIf="numeroCelularInput.errors?.['required']">
+            El número de celular es obligatorio.
+          </div>
+          <div class="error-telefono" *ngIf="numeroCelularInput.errors?.['pattern']">
+            El número de celular debe contener exactamente 9 dígitos y solo números.
+          </div>
+        </div>
+
+        <button class="submit-button" type="submit">
+          Register
+        </button>
+      </form>
+
+      <!-- Mobile Form -->
+      <form class="mobile-form" *ngIf="isMobileView">
+        <p class="form-description">Tu documento de identidad servirá para iniciar sesión.</p>
+
+        <div class="input-container">
+          <input type="text" id="nombres-mobile" name="nombresMobile" placeholder="Nombres" [(ngModel)]="nombres"
+            required autocomplete="off" />
+        </div>
+
+        <div class="input-container">
+          <input type="text" id="apellidos-mobile" name="apellidosMobile" placeholder="Apellidos"
+            [(ngModel)]="apellidos" required autocomplete="off" />
+        </div>
+
+        <div class="input-container">
+          <mat-select id="tipoDocumento-mobile" name="tipoDocumentoMobile" [(ngModel)]="tipoDocumento"
+            placeholder="Tipo de documento" required>
+            <mat-option value="" disabled selected>Tipo de documento</mat-option>
+            <mat-option *ngFor="let opt of tipoDocumentoOptions" [value]="opt.value">{{ opt.label }}</mat-option>
+          </mat-select>
+        </div>
+
+        <div class="input-container">
+          <input type="text" id="documento-mobile" name="documentoMobile" placeholder="Documento"
+            [(ngModel)]="documento" pattern="[0-9]{8}" required autocomplete="off" inputmode="numeric" />
+        </div>
+
+        <div class="input-container">
+          <input type="tel" id="numeroCelular-mobile" name="numeroCelularMobile" placeholder="Número de celular"
+            [(ngModel)]="numeroCelular" required pattern="[0-9]{9}" autocomplete="off"
+            #numeroCelularMobileInput="ngModel" />
+        </div>
+        <div *ngIf="numeroCelularMobileInput.invalid && (numeroCelularMobileInput.dirty || numeroCelularMobileInput.touched)">
+          <div class="error-telefono" *ngIf="numeroCelularMobileInput.errors?.['required']">
+            El número de celular es obligatorio.
+          </div>
+          <div class="error-telefono" *ngIf="numeroCelularMobileInput.errors?.['pattern']">
+            El número de celular debe contener exactamente 9 dígitos y solo números.
+          </div>
+        </div>
+
+        <div class="input-container">
+          <input type="date" id="fechaCumpleanos-mobile" name="fechaCumpleanosMobile" placeholder="Fecha de nacimiento"
+            [(ngModel)]="fechaCumpleanos" required />
+        </div>
+
+        <div class="input-container">
+          <mat-select id="zona-mobile" name="zonaMobile" [(ngModel)]="zona"
+            placeholder="Selecciona tu zona o congregación" required>
+            <mat-option value="" disabled selected>Selecciona tu zona o congregación</mat-option>
+            <mat-option *ngFor="let opt of zonaOptions" [value]="opt.value">{{ opt.label }}</mat-option>
+          </mat-select>
+        </div>
+
+        <button class="submit-button" type="button" (click)="nextStep()" [disabled]="!isStep1Valid()">
+          Continuar
+        </button>
+      </form>
+    </div>
+
+    <!-- STEP 2: Document Confirmation -->
+    <div class="step-content" *ngIf="currentStep === 2" [@stepTransition]>
+      <div class="confirmation-container">
+        <div class="icon-container">
+          <i class='bx bx-id-card'></i>
+        </div>
+        <h3 class="confirmation-title">Tu documento de identidad es:</h3>
+        <p class="confirmation-document">{{ documento }}</p>
+
+        <button class="submit-button confirm-button" (click)="nextStep()">
+          Sí
+        </button>
+        <button class="submit-button cancel-button" (click)="previousStep()">
+          No
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Student Type Selection -->
+    <div class="step-content" *ngIf="currentStep === 3" [@stepTransition]>
+      <div class="selection-container">
+        <h3 class="selection-title">Indica si eres nuevo o estudiante recurrente de la ECM.</h3>
+
+        <div role="radiogroup" aria-label="Tipo de estudiante" style="display:contents">
+          <div
+            class="selection-card"
+            role="radio"
+            tabindex="0"
+            [attr.aria-checked]="studentType === 'nuevo'"
+            (click)="selectStudentType('nuevo')"
+            (keydown.enter)="selectStudentType('nuevo')"
+            (keydown.space)="$event.preventDefault(); selectStudentType('nuevo')"
+            [class.selected]="studentType === 'nuevo'"
+          >
+            <div class="card-icon">
+              <i class='bx bx-user-plus'></i>
+            </div>
+            <div class="card-content">
+              <h4>Soy nuevo/a</h4>
+              <p>Nunca antes has llevado un curso de la ECM.</p>
+            </div>
+            <i class='bx bx-chevron-right card-arrow'></i>
+          </div>
+
+          <div
+            class="selection-card"
+            role="radio"
+            tabindex="0"
+            [attr.aria-checked]="studentType === 'recurrente'"
+            (click)="selectStudentType('recurrente')"
+            (keydown.enter)="selectStudentType('recurrente')"
+            (keydown.space)="$event.preventDefault(); selectStudentType('recurrente')"
+            [class.selected]="studentType === 'recurrente'"
+          >
+            <div class="card-icon">
+              <i class='bx bx-book-reader'></i>
+            </div>
+            <div class="card-content">
+              <h4>Soy alumno/a recurrente</h4>
+              <p>Has llevado uno o más cursos de la Escuela.</p>
+            </div>
+            <i class='bx bx-chevron-right card-arrow'></i>
+          </div>
+        </div>
+
+        <button class="submit-button" (click)="nextStep()" [disabled]="!studentType">
+          Continuar
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 4: Courses Completed -->
+    <div class="step-content" *ngIf="currentStep === 4" [@stepTransition]>
+      <div class="courses-container">
+        <h3 class="courses-title">Selecciona los cursos que has completado en la ECM hasta hoy.</h3>
+
+        <div class="courses-section" *ngFor="let nivel of coursesData">
+          <h4 class="nivel-title">{{ nivel.name }}</h4>
+          <div class="courses-grid">
+            <button *ngFor="let curso of nivel.courses" class="course-chip"
+              [class.selected]="isCourseSelected(curso.id)" (click)="toggleCourse(curso.id)">
+              {{ curso.name }}
+            </button>
+          </div>
+        </div>
+
+        <button class="submit-button" (click)="completeRegistration()"
+          [disabled]="selectedCourses.length === 0 && studentType === 'recurrente'">
+          Continuar
+        </button>
+      </div>
+    </div>
+
+    <!-- Desktop: Account link -->
+    <div class="account-container" *ngIf="!isMobileView">
+      <h3 class="no-account-text">
+        Ya tienes una cuenta?
+        <span class="register-link" routerLink="/login">Ingresar</span>
+      </h3>
+    </div>
+  </div>
+</div>

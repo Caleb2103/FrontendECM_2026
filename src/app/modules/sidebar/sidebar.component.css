@@ -1,0 +1,168 @@
+.sidebar {
+  width: var(--sidebar-width);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 1.25rem 0.75rem;
+  background-color: var(--color-sidebar-bg);
+  /* Transiciona width (no transform) a propósito: layout.component.css usa
+     margin-left para reservar este mismo ancho, así que el contenido
+     necesita animarse en sincronía con el propio ancho del sidebar. */
+  transition: width 0.25s ease;
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+.collapsed {
+  width: var(--sidebar-width-collapsed);
+}
+
+/* ── Logo ── */
+.sidebar__logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.collapsed .sidebar__logo {
+  justify-content: center;
+  padding: 0;
+}
+
+.sidebar__logo-mark {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.sidebar__logo-text {
+  font-family: var(--font-family-heading);
+  color: var(--color-sidebar-text);
+  font-size: 1.15rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ── Botón colapsar (solo escritorio) ──
+   top clamps a 50% para no salirse del sidebar en pantallas muy bajas. */
+.sidebar__collapse-btn {
+  position: absolute;
+  top: min(20rem, 50%);
+  right: -0.85rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-card-bg);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* ── Navegación ── */
+.sidenav-nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  overflow-y: auto;
+  /* Sin esto, un flex item con overflow no scrollea y en su lugar
+     desborda el contenedor (min-height:auto por defecto en flex items). */
+  min-height: 0;
+}
+
+.sidenav-nav-item {
+  width: 100%;
+}
+
+.sidenav-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  height: 2.75rem;
+  padding: 0 0.75rem;
+  border-radius: var(--radius-md);
+  color: var(--color-sidebar-text-muted);
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.collapsed .sidenav-nav-link {
+  justify-content: center;
+  padding: 0;
+}
+
+.sidenav-nav-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-sidebar-text);
+}
+
+.sidenav-nav-link.active {
+  background: var(--color-primary);
+  color: var(--color-sidebar-text);
+}
+
+.sidenav-link-icon {
+  flex-shrink: 0;
+  width: 1.5rem;
+  font-size: 1.3rem;
+  text-align: center;
+  transition: font-size 0.3s ease;
+}
+
+/* Sin el label al lado, el ícono puede crecer para seguir siendo
+   fácil de reconocer/tocar. */
+.collapsed .sidenav-link-icon {
+  width: auto;
+  font-size: 1.4rem;
+}
+
+.sidenav-link-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Mobile: drawer off-canvas, abierto/cerrado desde el header ── */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 80%;
+    max-width: 18rem;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+
+  .sidebar.mobile-visible {
+    transform: translateX(0);
+  }
+
+  .sidebar.collapsed {
+    width: 80%;
+    max-width: 18rem;
+  }
+
+  .sidebar__collapse-btn {
+    display: none;
+  }
+}

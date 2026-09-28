@@ -1,0 +1,685 @@
+::-webkit-scrollbar {
+  width: 0;
+}
+
+:host {
+  font-family: var(--font-family-base);
+}
+
+
+.course-subtitle {
+  margin-left: 1.5rem;
+  margin-top: 1.5rem;
+  font-size: 17px;
+  font-family: var(--font-family-base);
+}
+
+.mat-mdc-table .mdc-data-table__header-row {
+  background-color: var(--color-card-bg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.mdc-data-table__table {
+  min-width: 97%;
+}
+
+.custom-mat-table {
+  margin: 0 1rem;
+  margin-bottom: 1rem;
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(6, 6, 6, 0.2);
+}
+
+.th-column,
+.td-column {
+  padding: 1rem;
+  text-align: left;
+  border-collapse: collapse;
+}
+
+.th-column {
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+/* Columna de nombre: evita que el texto envuelva a 2 líneas cuando se
+   comprime la tabla, truncando con elipsis en vez de romper el layout. */
+.mat-column-name {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table-row:hover {
+  background-color: var(--color-page-bg);
+}
+
+.nota-circle {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+.aprobado {
+  background-color: var(--color-success);
+  color: white;
+}
+
+.reprobado {
+  background-color: var(--color-danger);
+  color: white;
+}
+
+.none {
+  background-color: var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.buttons {
+  display: flex;
+  margin-left: 0.3rem;
+  width: 100%;
+}
+
+.buttons button {
+  font-family: var(--font-family-base);
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  margin-left: 1rem;
+}
+
+.buttons button:enabled {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.buttons button:disabled {
+  background-color: var(--color-page-bg);
+  color: black;
+}
+
+.buttons button:enabled:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.input-field {
+  width: 40px;
+  height: 20px;
+  appearance: none;
+  -moz-appearance: textfield;
+  border-radius: 10px;
+  padding: 0.3rem;
+}
+
+.mat-mdc-checkbox.mat-accent {
+  --mdc-checkbox-selected-icon-color: var(--color-primary);
+  --mdc-checkbox-selected-checkmark-color: #fff;
+  --mdc-checkbox-selected-focus-icon-color: var(--color-primary);
+  --mdc-checkbox-selected-hover-icon-color: var(--color-primary);
+  --mdc-checkbox-selected-pressed-icon-color: var(--color-primary);
+  --mdc-checkbox-unselected-focus-icon-color: var(--color-primary);
+  --mdc-checkbox-unselected-hover-icon-color: var(--color-primary);
+}
+
+.no-data-message {
+  margin-top: 1rem;
+  margin-left: 1.5rem;
+  font-style: italic;
+}
+
+/* .spinner-container / .spinner / @keyframes spin viven ahora en
+   src/styles.css como utilidad global (antes duplicados byte a byte
+   entre este archivo e inscriptions.component.css). */
+
+/* ── Visibilidad escritorio / móvil ─────────────────────────── */
+.desktop-view { display: block; }
+.mobile-view  { display: none;  }
+
+/* ── Breakpoints escritorio ─────────────────────────────────── */
+@media (max-width: 1124px) {
+  .td-column {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 1050px) {
+  .table-responsive {
+    margin-left: 0.6rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .custom-mat-table {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    margin-left: 1rem;
+    width: 100%;
+    display: block;
+  }
+}
+
+/* ── Punto de quiebre móvil ─────────────────────────────────── */
+@media (max-width: 766px) {
+  .buttons {
+    margin-left: 0;
+    margin-bottom: 1rem;
+  }
+
+  .buttons button {
+    margin-left: 0.5rem;
+  }
+
+  /* Ocultar tabla, mostrar vista móvil */
+  .desktop-view { display: none; }
+  .mobile-view  { display: block; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NUEVA VISTA MÓVIL — Lista y Detalle
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Header lista ───────────────────────────────────────────── */
+.mob-header {
+  display: flex;
+  align-items: center;
+  margin: 0rem 0 1.25rem;
+  font-size: 1.25rem;
+}
+
+.mob-back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 50%;
+  color: var(--color-text);
+  font-size: 1.7rem;
+  flex-shrink: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mob-title {
+  font-family: var(--font-family-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* ── Turno header ───────────────────────────────────────────── */
+.mob-turno-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.mob-turno-label {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  margin-left: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.mob-turno-time {
+  font-size: 0.8rem;
+  color: var(--color-text);
+  font-weight: 600;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ── Receso ─────────────────────────────────────────────────── */
+.mob-receso {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.25rem 0 1rem;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+.mob-receso-line {
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+/* ── Course card ────────────────────────────────────────────── */
+.mob-course-card {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+  margin-bottom: 0.875rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: box-shadow 0.15s ease;
+}
+
+.mob-course-card:active {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+}
+
+.mob-course-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.mob-course-id {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+.mob-course-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.18rem 0.65rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.mob-course-badge.troncal {
+  background: var(--color-warning-soft);
+  color: var(--color-warning);
+}
+
+.mob-course-badge.electivo {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.mob-course-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 0.75rem;
+  font-family: var(--font-family-base);
+}
+
+.mob-course-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem 0.5rem;
+}
+
+.mob-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.79rem;
+  color: #4b5563;
+}
+
+.mob-meta-item i {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+}
+
+/* ── Detail header ──────────────────────────────────────────── */
+.mob-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 0 1rem;
+}
+
+.mob-detail-title {
+  font-family: var(--font-family-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mob-detail-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* ── Segmented tab toggle ───────────────────────────────────── */
+.mob-tab-toggle {
+  display: flex;
+  background: var(--color-page-bg);
+  border-radius: 20px;
+  padding: 0.3rem;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.mob-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: transparent;
+  color: var(--color-text-muted);
+  border: none;
+  border-radius: 18px;
+  padding: 0.7rem 1rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: var(--font-family-base);
+  transition: background 0.18s ease, color 0.18s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mob-tab-btn.active {
+  background: var(--color-primary);
+  color: white;
+}
+
+/* ── Grade column ───────────────────────────────────────────── */
+.col-grade {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mob-table-head .col-grade {
+  font-size: 0.77rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.mob-table-row--grade {
+  grid-template-columns: 36px 1fr 72px;
+}
+
+.mob-grade-field {
+  width: 56px;
+  height: 36px;
+  text-align: center;
+  border: 1.5px solid var(--color-border);
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text);
+  background: var(--color-page-bg);
+  outline: none;
+  -moz-appearance: textfield;
+  appearance: textfield;
+  font-family: var(--font-family-base);
+  transition: border-color 0.15s ease;
+}
+
+.mob-grade-field:focus {
+  border-color: var(--color-primary);
+  background: var(--color-card-bg);
+}
+
+.mob-grade-field::-webkit-outer-spin-button,
+.mob-grade-field::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* ── Calendar card ──────────────────────────────────────────── */
+.mob-calendar-card {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.mob-cal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.mob-cal-month {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-transform: capitalize;
+}
+
+.mob-cal-nav {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.mob-cal-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-border);
+  background: var(--color-card-bg);
+  border-radius: 8px;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.mob-cal-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.mob-cal-sessions {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.2rem;
+}
+
+.mob-cal-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  flex: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mob-cal-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.mob-cal-label.active {
+  color: var(--color-primary);
+}
+
+.mob-cal-date-wrap {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.mob-cal-date-wrap.active {
+  background: var(--color-text);
+}
+
+.mob-cal-date {
+  font-size: 0.78rem;
+  color: var(--color-text);
+}
+
+.mob-cal-date-wrap.active .mob-cal-date {
+  color: white;
+  font-weight: 700;
+}
+
+/* ── Student list ───────────────────────────────────────────── */
+.mob-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.25rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.mob-list-count {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.mob-student-table {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 100px;
+}
+
+.mob-table-head {
+  display: grid;
+  grid-template-columns: 36px 1fr 80px;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-page-bg);
+}
+
+.mob-table-head span {
+  font-size: 0.77rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.mob-table-row {
+  display: grid;
+  grid-template-columns: 36px 1fr 80px;
+  align-items: center;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--color-page-bg);
+}
+
+.mob-table-row:last-child {
+  border-bottom: none;
+}
+
+.col-num {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.col-name {
+  font-size: 0.82rem;
+  color: var(--color-text);
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 0.5rem;
+}
+
+.col-toggle {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ── Toggle switch ──────────────────────────────────────────── */
+.mob-toggle {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+  cursor: pointer;
+}
+
+.mob-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.mob-toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: var(--color-danger);
+  border-radius: 26px;
+  transition: background 0.2s ease;
+}
+
+.mob-toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 3px;
+  top: 3px;
+  background: var(--color-card-bg);
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.mob-toggle input:checked + .mob-toggle-slider {
+  background: var(--color-success);
+}
+
+.mob-toggle input:checked + .mob-toggle-slider::before {
+  transform: translateX(22px);
+}
+
+/* ── Confirm bar (fijo) ─────────────────────────────────────── */
+.mob-confirm-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.875rem 1rem;
+  background: var(--color-card-bg);
+  border-top: 1px solid var(--color-border);
+  z-index: 10;
+}
+
+.mob-confirm-btn {
+  width: 100%;
+  padding: 0.875rem;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-family-base);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mob-confirm-btn:active {
+  background: var(--color-primary-hover);
+}

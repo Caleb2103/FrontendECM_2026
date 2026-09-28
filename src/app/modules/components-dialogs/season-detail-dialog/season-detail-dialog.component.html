@@ -1,0 +1,48 @@
+<div class="detail-dialog">
+  <div class="dialog-header">
+    <h2 mat-dialog-title class="dialog-title">Detalle del curso</h2>
+  </div>
+
+  <div mat-dialog-content class="dialog-body">
+    <div class="course-summary">
+      <span class="course-summary-icon"><i class="bx bxs-book-content"></i></span>
+      <div class="course-summary-text">
+        <h3 class="course-name">{{ ciclo.stud_season.seas_course.cour_description }}</h3>
+        <span class="level-badge">{{ levelText }}</span>
+      </div>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-row">
+        <span class="detail-label"><i class="bx bx-calendar"></i> Ciclo</span>
+        <span class="detail-value">{{ ciclo.stud_season.seas_period.peri_description }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label"><i class="bx bx-calendar-check"></i> Fecha de inicio</span>
+        <span class="detail-value">{{ ciclo.stud_season.seas_period.peri_start }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label"><i class="bx bx-calendar-x"></i> Fecha de finalización</span>
+        <span class="detail-value">{{ ciclo.stud_season.seas_period.peri_end }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label"><i class="bx bx-time"></i> Turno</span>
+        <span class="detail-value">{{ ciclo.stud_season.seas_schedule.sche_description }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label"><i class="bx bx-user"></i> Profesor</span>
+        <span class="detail-value">{{ teacherName }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label"><i class="bx bx-check-circle"></i> Nota final</span>
+        <span class="nota-badge" [ngClass]="notaBadgeClass">
+          {{ ciclo.seas_final != null ? ciclo.seas_final : '—' }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div mat-dialog-actions class="dialog-actions">
+    <button class="btn-primary" type="button" (click)="onClose()">Cerrar</button>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<div class="layout" [class.layout--guest]="!isLoggedIn">
+  <app-sidebar
+    *ngIf="isLoggedIn"
+    [collapsed]="isCollapsed"
+    [mobileOpen]="isMobileSidebarVisible"
+    (onToggleSidenav)="onToggleSidenav($event)"
+    (onCloseMobile)="closeMobileSidebar()"
+  ></app-sidebar>
+
+  <!-- Backdrop del drawer mobile: click afuera cierra el sidebar -->
+  <div
+    class="layout__backdrop"
+    *ngIf="isLoggedIn && isMobileSidebarVisible"
+    (click)="closeMobileSidebar()"
+  ></div>
+
+  <div class="layout__main" [class.layout__main--collapsed]="isCollapsed">
+    <app-header *ngIf="isLoggedIn" (onMenuClick)="toggleMobileSidebar()"></app-header>
+    <main class="layout__content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

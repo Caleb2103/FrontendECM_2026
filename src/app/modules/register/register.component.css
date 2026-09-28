@@ -1,0 +1,599 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  position: relative;
+  height: 100vh;
+}
+
+.left-side,
+.right-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.welcome-text h3 {
+  font-family: var(--font-family-heading);
+  font-size: 24px;
+  font-weight: 600;
+  text-align: start;
+  /* padding fluido en vez de transform:translate(px) fijo: escala sin
+     desbordar el panel en ningún ancho, en vez de solo corregirse en
+     breakpoints puntuales. */
+  padding-left: clamp(50px, 8vw, 105px);
+  margin-bottom: 1.5rem;
+}
+
+.school-text h1 {
+  font-family: var(--font-family-heading);
+  font-size: 55px;
+  font-weight: 600;
+  line-height: 1.3;
+  padding-left: clamp(50px, 8vw, 100px);
+}
+
+.left-side {
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  width: 60%;
+  color: white;
+  opacity: 1;
+  background-image: radial-gradient(var(--color-border) 1px, var(--color-primary) 2px);
+  background-size: 40px 40px;
+}
+
+.left-side .welcome-text,
+.left-side .school-text {
+  background-color: var(--color-primary);
+}
+
+.right-side {
+  background-color: var(--color-card-bg);
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+  z-index: 2;
+  padding-left: 1.3rem;
+  padding-right: 1.3rem;
+}
+
+.subtitle-text {
+  font-family: var(--font-family-heading);
+  font-size: 28px;
+  font-weight: 600;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  margin: 0.5rem 0;
+  max-width: 400px;
+}
+
+input {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 5px;
+  border: 1px solid var(--color-border);
+}
+
+.input-container {
+  width: 100%;
+  margin: 0.6rem 0;
+}
+
+.input-container input {
+  font-size: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+.input-container input:focus {
+  outline: none;
+  border: 2px solid var(--color-primary);
+  transition: 0.1s;
+}
+
+.input-row {
+  display: flex;
+}
+
+#documento {
+  width: 96%;
+  margin-left: 0.5rem;
+}
+
+input:focus {
+  outline-color: var(--color-primary);
+}
+
+mat-select {
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 13px 20px;
+  margin-top: 0.7rem;
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 7px;
+  transition: opacity 0.2s;
+  font-size: 16px;
+}
+
+.submit-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.submit-button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.account-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.7rem;
+}
+
+.no-account-text {
+  font-family: var(--font-family-base);
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.register-link {
+  text-align: left;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.register-link:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+input[type="text"],
+input[type="tel"],
+select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+.error-telefono {
+  color: var(--color-danger);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* ========== MOBILE STEPPER STYLES ========== */
+
+.mobile-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 0.5rem;
+  background-color: var(--color-card-bg);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  padding: 0;
+  margin-right: 0.5rem;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+}
+
+.step-title {
+  font-family: var(--font-family-heading);
+  font-size: 24px;
+  font-weight: 600;
+  margin: 1rem 0;
+}
+
+.step-content {
+  width: 100%;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.mobile-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+}
+
+.form-description {
+  font-family: var(--font-family-base);
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+/* Step 2: Confirmation */
+.confirmation-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  text-align: center;
+  min-height: 60vh;
+}
+
+.icon-container {
+  width: 80px;
+  height: 80px;
+  background-color: var(--color-primary-soft);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.icon-container i {
+  font-size: 40px;
+  color: var(--color-primary);
+}
+
+.confirmation-title {
+  font-family: var(--font-family-heading);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+}
+
+.confirmation-document {
+  font-family: var(--font-family-base);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 2rem;
+}
+
+.confirm-button {
+  margin-bottom: 0.8rem;
+}
+
+.cancel-button {
+  background-color: var(--color-card-bg);
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+}
+
+/* Step 3: Selection Cards */
+.selection-container {
+  padding: 1rem;
+}
+
+.selection-title {
+  font-family: var(--font-family-heading);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.selection-card {
+  display: flex;
+  align-items: center;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  background-color: var(--color-card-bg);
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.selection-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+}
+
+.selection-card.selected {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+}
+
+.card-icon {
+  width: 50px;
+  height: 50px;
+  background-color: var(--color-primary-soft);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.card-icon i {
+  font-size: 24px;
+  color: var(--color-primary);
+}
+
+.card-content {
+  flex: 1;
+}
+
+.card-content h4 {
+  font-family: var(--font-family-base);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 0.3rem 0;
+}
+
+.card-content p {
+  font-family: var(--font-family-base);
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.card-arrow {
+  font-size: 24px;
+  color: var(--color-border);
+  margin-left: 0.5rem;
+}
+
+.selection-card.selected .card-arrow {
+  color: var(--color-primary);
+}
+
+/* Step 4: Courses */
+.courses-container {
+  padding: 0.5rem;
+}
+
+.courses-title {
+  font-family: var(--font-family-heading);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.courses-section {
+  margin-bottom: 1.5rem;
+}
+
+.nivel-title {
+  font-family: var(--font-family-base);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.course-chip {
+  padding: 0.8rem 1rem;
+  background-color: var(--color-card-bg);
+  border: 2px solid var(--color-border);
+  border-radius: 20px;
+  font-family: var(--font-family-base);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.course-chip:hover {
+  border-color: var(--color-primary);
+}
+
+.course-chip.selected {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+/* ========== RESPONSIVE ========== */
+
+@media screen and (max-width: 1200px) {
+  .left-side {
+    width: 50%;
+  }
+  .right-side {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  .left-side {
+    width: 40%;
+  }
+  .right-side {
+    width: 60%;
+  }
+  .school-text h1 {
+    font-size: 40px;
+    padding-top: 0.5rem;
+  }
+  .welcome-text h3 {
+    font-size: 20px;
+    text-align: start;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .left-side {
+    display: none;
+  }
+
+  .right-side {
+    width: 100%;
+  }
+
+  .school-text h1 {
+    font-size: 36px;
+  }
+
+  .welcome-text h3 {
+    font-size: 16px;
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
+@media screen and (max-width: 415px) {
+  .container {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .right-side {
+    justify-content: flex-start;
+    align-items: stretch;
+    min-height: 100vh;
+  }
+
+  .step-content {
+    width: 100%;
+    padding: 1rem 0.5rem;
+    overflow-y: auto;
+  }
+
+  .mobile-form {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+  }
+
+  .form-description {
+    font-family: var(--font-family-base);
+    font-size: 18px;
+    margin-left: 0.3rem;
+  }
+
+  .mobile-form .input-container {
+    margin: 0.5rem 0;
+    width: 100%;
+  }
+
+  .mobile-form .input-container input,
+  .mobile-form .input-container mat-select {
+    width: 100%;
+    margin: 0;
+    padding: 0.9rem;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+
+  .mobile-form .submit-button {
+    width: 100%;
+    margin: 1.5rem 0 0.5rem 0;
+    padding: 13px 20px;
+    box-sizing: border-box;
+  }
+
+  .mobile-form mat-select {
+    display: block;
+    width: 100%;
+  }
+
+  form:not(.mobile-form) .subtitle-text {
+    font-size: 25px;
+    margin: 0.4rem 0;
+  }
+
+  form:not(.mobile-form) .input-container input,
+  form:not(.mobile-form) input:not(#documento),
+  form:not(.mobile-form) .input-container mat-select,
+  form:not(.mobile-form) .submit-button {
+    width: 100%;
+    margin: 0.4rem 0;
+  }
+
+  form:not(.mobile-form) #documento {
+    width: 96%;
+    margin: 0.4rem 0 0.4rem 0.2rem;
+  }
+
+  .confirmation-container {
+    padding: 2rem 0.5rem;
+  }
+
+  .selection-container {
+    padding: 0.5rem;
+  }
+
+  .courses-container {
+    padding: 0.5rem;
+  }
+}

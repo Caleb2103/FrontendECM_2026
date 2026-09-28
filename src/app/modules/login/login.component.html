@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="left-side">
+    <div class="welcome-text">
+      <h3>Bienvenido</h3>
+    </div>
+    <div class="school-text">
+      <h1>Escuela de<br>Capacitación Ministerial</h1>
+    </div>
+  </div>
+
+  <div class="right-side">
+    <img class="logo-image" src="./assets/logo.png" alt="" />
+    <form (ngSubmit)="login()" #loginForm="ngForm">
+      <h2 class="subtitle-text">¡Bienvenido!</h2>
+      <h6 class="normal-text">Porfavor ingresa tu documento de identidad</h6>
+      <div class="input-container">
+        <label class="sr-only" for="dni">DNI o CE</label>
+        <input type="text" id="dni" name="dni" placeholder="DNI o CE:" [(ngModel)]="dni" required pattern="[0-9]{8}"
+          inputmode="numeric" autocomplete="off" aria-describedby="dniError" />
+      </div>
+      <p class="error-message" id="dniError" role="alert" *ngIf="errorMessage">{{ errorMessage }}</p>
+      <button class="submit-button" type="submit">Iniciar sesión</button>
+    </form>
+
+    <div class="line"></div>
+
+    <div class="account-container">
+      <h3 class="no-account-text">
+        ¿Aun no tienes una cuenta? <span class="register-link" routerLink='/register'>Crea tu cuenta aquí</span>
+      </h3>
+    </div>
+  </div>
+</div>

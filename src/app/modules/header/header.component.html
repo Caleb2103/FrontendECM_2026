@@ -1,0 +1,43 @@
+<header class="header">
+  <button class="header__menu-btn" type="button" (click)="onMenuClick.emit()" aria-label="Abrir menú">
+    <i class="bx bx-menu"></i>
+  </button>
+
+  <div class="header__spacer"></div>
+
+  <button class="header__icon-btn" type="button" title="Ayuda" aria-label="Ayuda">
+    <i class="bx bx-help-circle"></i>
+  </button>
+
+  <button class="header__icon-btn header__icon-btn--bell" type="button" title="Notificaciones" aria-label="Notificaciones">
+    <i class="bx bx-bell"></i>
+    <span class="header__dot"></span>
+  </button>
+
+  <div class="header__user">
+    <button
+      #avatarBtn
+      type="button"
+      class="header__avatar"
+      (click)="toggleUserMenu()"
+      aria-label="Menú de usuario"
+      aria-haspopup="true"
+      [attr.aria-expanded]="isUserMenuOpen"
+    >{{ userInitials }}</button>
+
+    <div class="header__menu" role="menu" *ngIf="isUserMenuOpen">
+      <p class="header__menu-name">{{ userName || 'Usuario' }}</p>
+      <a class="header__menu-link" role="menuitem" routerLink="/profile" (click)="closeUserMenu()">
+        <i class="bx bx-user"></i>
+        Perfil
+      </a>
+      <button class="header__logout-btn" type="button" role="menuitem" (click)="logout()">
+        <i class="bx bx-log-out"></i>
+        Cerrar sesión
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Cierra el menú de usuario al hacer click afuera -->
+<div class="header__click-catcher" *ngIf="isUserMenuOpen" (click)="closeUserMenu()"></div>

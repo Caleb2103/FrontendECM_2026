@@ -1,0 +1,36 @@
+.title {
+  font-family: var(--font-family-heading);
+  font-weight: 600;
+  margin: 0.5rem;
+  padding: 0;
+}
+
+.subtitle {
+  font-weight: 500;
+  margin: 1rem 0.5rem;
+  padding: 0;
+}
+
+.main-content {
+  background: linear-gradient(to bottom, var(--color-primary) 7%, white 7%);
+  width: 350px;
+}
+
+.button-detail {
+  font-family: var(--font-family-base);
+  background-color: var(--color-primary);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  padding: 0.8rem;
+  cursor: pointer;
+  text-align: center;
+}
+
+.mat-dialog-actions {
+  display: flex;
+}
+
+.mat-mdc-dialog-actions {
+  justify-content: space-evenly;
+}

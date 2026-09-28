@@ -1,0 +1,340 @@
+<div class="content">
+
+  <!-- ===== DESKTOP VIEW ===== -->
+  <div class="desktop-view">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="page-header-text">
+        <h2 class="page-title">Vouchers</h2>
+        <p class="page-subtitle">Gestión de comprobantes de pago</p>
+      </div>
+
+      <button class="refresh-btn" (click)="loadVouchers(true)" title="Actualizar" aria-label="Actualizar vouchers">
+        <i class="bx bx-refresh"></i>
+      </button>
+    </div>
+
+    <!-- Summary Cards -->
+    <!-- <div class="summary-cards">
+      <div class="summary-card total" (click)="setFilter('ALL')" [class.active]="activeFilter === 'ALL'">
+        <i class="bx bx-receipt summary-icon"></i>
+        <div>
+          <span class="summary-number">{{ countByStatus('ALL') }}</span>
+          <span class="summary-label">Total</span>
+        </div>
+      </div>
+      <div class="summary-card pending" (click)="setFilter('PENDIENTE')" [class.active]="activeFilter === 'PENDIENTE'">
+        <i class="bx bx-time-five summary-icon"></i>
+        <div>
+          <span class="summary-number">{{ countByStatus('PENDIENTE') }}</span>
+          <span class="summary-label">Pendientes</span>
+        </div>
+      </div>
+      <div class="summary-card approved" (click)="setFilter('APROBADO')" [class.active]="activeFilter === 'APROBADO'">
+        <i class="bx bx-check-circle summary-icon"></i>
+        <div>
+          <span class="summary-number">{{ countByStatus('APROBADO') }}</span>
+          <span class="summary-label">Aprobados</span>
+        </div>
+      </div>
+      <div class="summary-card rejected" (click)="setFilter('RECHAZADO')" [class.active]="activeFilter === 'RECHAZADO'">
+        <i class="bx bx-x-circle summary-icon"></i>
+        <div>
+          <span class="summary-number">{{ countByStatus('RECHAZADO') }}</span>
+          <span class="summary-label">Rechazados</span>
+        </div>
+      </div>
+    </div> -->
+
+    <!-- Search Bar -->
+    <div class="search-bar-wrapper">
+      <i class="bx bx-search search-icon-bar"></i>
+      <input
+        class="search-bar"
+        type="text"
+        placeholder="Buscar por nombre, DNI u operación..."
+        [(ngModel)]="searchQuery"
+        (input)="onSearch()"
+      />
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="spinner-container" *ngIf="isLoading">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!isLoading && filteredVouchers.length === 0">
+      <i class="bx bx-folder-open empty-icon"></i>
+      <p>No se encontraron vouchers</p>
+    </div>
+
+    <!-- Table -->
+    <div class="custom-mat-table" *ngIf="!isLoading && filteredVouchers.length > 0">
+      <table mat-table [dataSource]="filteredVouchers" class="w-full">
+
+        <!-- N° Column -->
+        <ng-container matColumnDef="index">
+          <th mat-header-cell *matHeaderCellDef class="th-column">#</th>
+          <td mat-cell *matCellDef="let voucher; let i = index" class="td-column">{{ i + 1 }}</td>
+        </ng-container>
+
+        <!-- Member Column -->
+        <ng-container matColumnDef="member">
+          <th mat-header-cell *matHeaderCellDef class="th-column">Nombre</th>
+          <td mat-cell *matCellDef="let voucher" class="td-column">
+            <div class="member-cell">
+              <span class="member-avatar">{{ voucher.vouc_member.memb_name[0] }}{{ voucher.vouc_member.memb_surname[0] }}</span>
+              <div>
+                <div class="member-name">{{ voucher.vouc_member.memb_name }} {{ voucher.vouc_member.memb_surname }}</div>
+                <div class="member-zone" *ngIf="voucher.vouc_member.memb_zone">{{ voucher.vouc_member.memb_zone.zone_name }}</div>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- DNI Column -->
+        <ng-container matColumnDef="dni">
+          <th mat-header-cell *matHeaderCellDef class="th-column">DNI</th>
+          <td mat-cell *matCellDef="let voucher" class="td-column mono">{{ voucher.vouc_member.memb_dni }}</td>
+        </ng-container>
+
+        <!-- Period Column -->
+        <ng-container matColumnDef="period">
+          <th mat-header-cell *matHeaderCellDef class="th-column">Período</th>
+          <td mat-cell *matCellDef="let voucher" class="td-column">{{ voucher.vouc_period?.peri_description || '—' }}</td>
+        </ng-container>
+
+        <!-- Operation Column -->
+        <ng-container matColumnDef="operation">
+          <th mat-header-cell *matHeaderCellDef class="th-column">N° Operación</th>
+          <td mat-cell *matCellDef="let voucher" class="td-column mono">{{ voucher.vouc_operation_number }}</td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef class="th-column">Estado</th>
+          <td mat-cell *matCellDef="let voucher" class="td-column">
+            <span class="status-badge" [ngClass]="getStatusClass(voucher.vouc_status)">
+              {{ getStatusLabel(voucher.vouc_status) }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Date Column -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef class="th-column">Fecha</th>
+          <td mat-cell *matCellDef="let voucher" class="td-column date-cell">{{ formatDate(voucher.vouc_created_at) }}</td>
+        </ng-container>
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef class="th-column">Voucher</th>
+          <td mat-cell *matCellDef="let voucher" class="td-column">
+            <button class="btn-view" (click)="viewImage(voucher)" aria-label="Ver imagen del voucher">
+              <i class="bx bx-image-alt"></i> Imagen
+            </button>
+          </td>
+        </ng-container>
+
+        <!-- Approve Column -->
+        <!-- <ng-container matColumnDef="approve">
+          <th mat-header-cell *matHeaderCellDef class="th-column">Aprobar</th>
+          <td mat-cell *matCellDef="let voucher" class="td-column">
+            <button
+              class="btn-approve"
+              *ngIf="voucher.vouc_status?.toUpperCase() !== 'APROBADO'"
+              [disabled]="approvingId === voucher.vouc_id"
+              (click)="approveVoucher(voucher)"
+            >
+              <i class="bx" [ngClass]="approvingId === voucher.vouc_id ? 'bx-loader-alt bx-spin' : 'bx-check'"></i>
+              {{ approvingId === voucher.vouc_id ? 'Aprobando...' : 'Aprobar' }}
+            </button>
+            <span class="approved-label" *ngIf="voucher.vouc_status?.toUpperCase() === 'APROBADO'">
+              <i class="bx bx-check-circle"></i> Aprobado
+            </span>
+          </td>
+        </ng-container> -->
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+      </table>
+    </div>
+
+  </div>
+  <!-- END DESKTOP VIEW -->
+
+  <!-- ===== MOBILE VIEW ===== -->
+  <div class="mobile-view">
+
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+      <h2 class="mobile-title">Vouchers de Pago</h2>
+      <button class="refresh-btn-mobile" (click)="loadVouchers(true)" aria-label="Actualizar vouchers">
+        <i class="bx bx-refresh"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Search -->
+    <div class="search-container-mobile">
+      <input
+        class="search-input-mobile"
+        type="text"
+        placeholder="Buscar por nombre o DNI..."
+        [(ngModel)]="searchQuery"
+        (input)="onSearch()"
+      />
+      <i class="bx bx-search search-icon-mobile"></i>
+    </div>
+
+    <!-- Mobile Filter Chips -->
+    <div class="filter-chips-mobile">
+      <button class="chip-mobile" [class.active]="activeFilter === 'ALL'" (click)="setFilter('ALL')">
+        Todos ({{ countByStatus('ALL') }})
+      </button>
+      <button class="chip-mobile" [class.active]="activeFilter === 'PENDIENTE'" (click)="setFilter('PENDIENTE')">
+        Pendientes ({{ countByStatus('PENDIENTE') }})
+      </button>
+      <button class="chip-mobile" [class.active]="activeFilter === 'APROBADO'" (click)="setFilter('APROBADO')">
+        Aprobados ({{ countByStatus('APROBADO') }})
+      </button>
+      <button class="chip-mobile" [class.active]="activeFilter === 'RECHAZADO'" (click)="setFilter('RECHAZADO')">
+        Rechazados ({{ countByStatus('RECHAZADO') }})
+      </button>
+    </div>
+
+    <!-- Mobile Loading -->
+    <div class="spinner-container" *ngIf="isLoading">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Mobile Empty State -->
+    <div class="empty-state" *ngIf="!isLoading && filteredVouchers.length === 0">
+      <i class="bx bx-folder-open empty-icon"></i>
+      <p>No se encontraron vouchers</p>
+    </div>
+
+    <!-- Mobile Cards -->
+    <div class="voucher-cards-mobile" *ngIf="!isLoading">
+      <div class="voucher-card-mobile" *ngFor="let voucher of filteredVouchers">
+
+        <div class="card-top">
+          <div class="member-avatar-mobile">
+            {{ voucher.vouc_member.memb_name[0] }}{{ voucher.vouc_member.memb_surname[0] }}
+          </div>
+          <div class="card-member-info">
+            <div class="card-member-name">{{ voucher.vouc_member.memb_name }} {{ voucher.vouc_member.memb_surname }}</div>
+            <div class="card-member-dni">DNI: {{ voucher.vouc_member.memb_dni }}</div>
+          </div>
+          <span class="status-badge" [ngClass]="getStatusClass(voucher.vouc_status)">
+            {{ getStatusLabel(voucher.vouc_status) }}
+          </span>
+        </div>
+
+        <div class="card-details">
+          <div class="card-detail-row">
+            <i class="bx bx-calendar"></i>
+            <span class="card-detail-label">Período</span>
+            <span class="card-detail-value">{{ voucher.vouc_period.peri_description || '—' }}</span>
+          </div>
+          <div class="card-detail-row">
+            <i class="bx bx-hash"></i>
+            <span class="card-detail-label">N° Operación</span>
+            <span class="card-detail-value mono">{{ voucher.vouc_operation_number }}</span>
+          </div>
+          <div class="card-detail-row">
+            <i class="bx bx-time"></i>
+            <span class="card-detail-label">Fecha</span>
+            <span class="card-detail-value">{{ formatDate(voucher.vouc_created_at) }}</span>
+          </div>
+        </div>
+
+        <div class="card-buttons-mobile">
+          <button class="btn-view-mobile" (click)="viewImage(voucher)">
+            <i class="bx bx-image-alt"></i> Ver voucher
+          </button>
+          <button
+            class="btn-approve-mobile"
+            *ngIf="voucher.vouc_status.toUpperCase() !== 'APROBADO'"
+            [disabled]="approvingId === voucher.vouc_id"
+            (click)="approveVoucher(voucher)"
+          >
+            <i class="bx" [ngClass]="approvingId === voucher.vouc_id ? 'bx-loader-alt bx-spin' : 'bx-check'"></i>
+            {{ approvingId === voucher.vouc_id ? 'Aprobando...' : 'Aprobar' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- END MOBILE VIEW -->
+
+</div>
+
+<!-- ===== IMAGE MODAL ===== -->
+<div class="modal-overlay" *ngIf="selectedVoucher" (click)="closeModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <div class="modal-title-group">
+        <h3 class="modal-title">Voucher de pago</h3>
+        <span class="status-badge" [ngClass]="getStatusClass(selectedVoucher.vouc_status)">
+          {{ getStatusLabel(selectedVoucher.vouc_status) }}
+        </span>
+      </div>
+      <button class="modal-close-btn" (click)="closeModal()" aria-label="Cerrar">
+        <i class="bx bx-x"></i>
+      </button>
+    </div>
+
+    <div class="modal-member-info">
+      <div class="modal-avatar">
+        {{ selectedVoucher.vouc_member.memb_name[0] }}{{ selectedVoucher.vouc_member.memb_surname[0] }}
+      </div>
+      <div>
+        <div class="modal-member-name">
+          {{ selectedVoucher.vouc_member.memb_name }} {{ selectedVoucher.vouc_member.memb_surname }}
+        </div>
+        <div class="modal-member-meta">
+          DNI: {{ selectedVoucher.vouc_member.memb_dni }}
+          &nbsp;·&nbsp;
+          {{ selectedVoucher.vouc_period.peri_description }}
+        </div>
+        <div class="modal-operation">
+          N° Op: <span class="mono">{{ selectedVoucher.vouc_operation_number }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-image-wrapper">
+      <img
+        [src]="selectedImageUrl"
+        alt="Voucher de pago"
+        class="modal-image"
+        (error)="selectedImageUrl = ''"
+      />
+      <div class="modal-image-error" *ngIf="!selectedImageUrl">
+        <i class="bx bx-image-alt"></i>
+        <p>No se pudo cargar la imagen</p>
+      </div>
+    </div>
+
+    <div class="modal-comment" *ngIf="selectedVoucher.vouc_comment">
+      <i class="bx bx-comment-detail"></i>
+      <span>{{ selectedVoucher.vouc_comment }}</span>
+    </div>
+
+    <div class="modal-actions" *ngIf="selectedVoucher.vouc_status.toUpperCase() !== 'APROBADO'">
+      <button
+        class="btn-approve-modal"
+        [disabled]="approvingId === selectedVoucher.vouc_id"
+        (click)="approveVoucher(selectedVoucher)"
+      >
+        <i class="bx" [ngClass]="approvingId === selectedVoucher.vouc_id ? 'bx-loader-alt bx-spin' : 'bx-check-circle'"></i>
+        {{ approvingId === selectedVoucher.vouc_id ? 'Aprobando...' : 'Aprobar voucher' }}
+      </button>
+    </div>
+
+  </div>
+</div>

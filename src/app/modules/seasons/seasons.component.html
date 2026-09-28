@@ -1,0 +1,195 @@
+<div class="content">
+
+  <!-- ===== DESKTOP VIEW ===== -->
+  <div class="desktop-view">
+    <div class="page-header">
+      <h1 class="page-title">Ciclos</h1>
+      <p class="page-subtitle">Historial de cursos matriculados</p>
+    </div>
+
+    <div class="table-card">
+      <table mat-table [dataSource]="dataSource" class="custom-mat-table">
+        <ng-container matColumnDef="period">
+          <th mat-header-cell *matHeaderCellDef class="th-column">Periodo</th>
+          <td mat-cell *matCellDef="let element" class="td-column">
+            {{ element.stud_season.seas_period.peri_description }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="course">
+          <th mat-header-cell *matHeaderCellDef class="th-column">Curso</th>
+          <td mat-cell *matCellDef="let element" class="td-column td-course">
+            {{ element.stud_season.seas_course.cour_description }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="teacher">
+          <th mat-header-cell *matHeaderCellDef class="th-column">Profesor</th>
+          <td mat-cell *matCellDef="let element" class="td-column">
+            {{
+            element.stud_season.seas_teacher.memb_name +
+            " " +
+            element.stud_season.seas_teacher.memb_surname
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="mode">
+          <th mat-header-cell *matHeaderCellDef class="th-column">Modo</th>
+          <td mat-cell *matCellDef="let element" class="td-column">
+            <ng-container *ngIf="element.stud_season.seas_mode.mode_name === 'Virtual'">
+              <span class="icon-with-text">
+                <i class="bx bxl-zoom icon"></i> Virtual
+              </span>
+            </ng-container>
+            <ng-container *ngIf="element.stud_season.seas_mode.mode_name === 'Online'">
+              <span class="icon-with-text">
+                <i class="bx bx-desktop icon"></i> Online
+              </span>
+            </ng-container>
+            <ng-container *ngIf="element.stud_season.seas_mode.mode_name === 'Presencial'">
+              <span class="icon-with-text">
+                <i class="bx bx-user icon"></i> Presencial
+              </span>
+            </ng-container>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="note">
+          <th mat-header-cell *matHeaderCellDef class="th-column">Nota</th>
+          <td mat-cell *matCellDef="let element" class="td-column">
+            <span class="nota-badge" [ngClass]="{
+                aprobado: element.seas_final >= 13,
+                reprobado: element.seas_final < 13 && element.seas_final !== null,
+                none: element.seas_final === null
+              }">
+              {{ element.seas_final !== null ? element.seas_final : "—" }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="th-column">Acciones</th>
+          <td mat-cell *matCellDef="let element" class="td-column">
+            <button class="link-detail" (click)="verDetalles(element)">
+              Ver detalles
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <div class="spinner-container" *ngIf="loading">
+        <div class="spinner"></div>
+      </div>
+
+      <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 15, 20]"></mat-paginator>
+    </div>
+  </div>
+
+  <!-- ===== MOBILE VIEW ===== -->
+  <div class="mobile-view">
+
+    <!-- Header -->
+    <div class="mobile-header">
+      <button class="back-button" routerLink="/menu" aria-label="Volver">
+        <i class='bx bx-chevron-left' aria-hidden="true"></i>
+      </button>
+      <h1 class="mobile-title">Mis Notas</h1>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+      <input type="text" class="search-input" placeholder="Buscar" [(ngModel)]="searchTerm" (input)="filterCourses()" />
+      <i class='bx bx-search search-icon'></i>
+    </div>
+
+    <!-- Filter Chips -->
+    <div class="filter-chips">
+      <button class="chip" [class.active]="selectedFilter === 'all'" (click)="filterByLevel('all')">
+        Todos
+      </button>
+      <button class="chip" [class.active]="selectedFilter === 1" (click)="filterByLevel(1)">
+        Nivel 1
+      </button>
+      <button class="chip" [class.active]="selectedFilter === 2" (click)="filterByLevel(2)">
+        Nivel 2
+      </button>
+      <button class="chip" [class.active]="selectedFilter === 3" (click)="filterByLevel(3)">
+        Nivel 3
+      </button>
+    </div>
+
+    <!-- Courses List -->
+    <div class="courses-list">
+      <div *ngFor="let element of filteredStudentSeasons" class="course-card">
+        <!-- Card Header -->
+        <div class="card-header">
+          <div class="card-level-info">
+            <span class="level-badge">{{ getLevelText(element.stud_season.seas_course.cour_level) }}</span>
+            <span class="course-code">{{ element.stud_season.seas_period.peri_description }}</span>
+          </div>
+          <span class="status-badge" [ngClass]="{
+              'status-truncal': getStatusText(element) === 'TRONCAL',
+              'status-electivo': getStatusText(element) === 'ELECTIVO'
+            }">
+            {{ getStatusText(element) }}
+          </span>
+        </div>
+
+        <!-- Course Title -->
+        <h3 class="course-title">{{ element.stud_season.seas_course.cour_description }}</h3>
+
+        <!-- Teacher Name -->
+        <p class="teacher-name">
+          {{
+          (element.stud_season.seas_teacher.memb_name + " " + element.stud_season.seas_teacher.memb_surname) ===
+          "PROFESOR NO CONOCIDO"
+          ? "PROFESOR ZONAL"
+          : element.stud_season.seas_teacher.memb_name + " " + element.stud_season.seas_teacher.memb_surname
+          }}
+        </p>
+
+        <!-- Course Info Grid -->
+        <div class="course-info-grid">
+          <div class="info-item">
+            <ng-container *ngIf="element.stud_season.seas_mode.mode_name === 'Virtual'">
+              <i class='bx bxl-zoom'></i>
+              <span>Virtual</span>
+            </ng-container>
+            <ng-container *ngIf="element.stud_season.seas_mode.mode_name === 'Online'">
+              <i class='bx bx-desktop'></i>
+              <span>Online</span>
+            </ng-container>
+            <ng-container *ngIf="element.stud_season.seas_mode.mode_name === 'Presencial'">
+              <i class='bx bx-building'></i>
+              <span>Presencial</span>
+            </ng-container>
+          </div>
+
+          <div class="info-item">
+            <i class='bx bx-time'></i>
+            <span>{{ element.stud_season.seas_schedule.sche_starttime }}</span>
+          </div>
+
+          <div class="info-item">
+            <i class='bx bx-calendar'></i>
+            <span>{{ element.stud_season.seas_period.peri_start }}</span>
+          </div>
+
+          <div class="info-item">
+            <i class='bx bx-check-circle'></i>
+            <span>{{ element.seas_final !== null ? element.seas_final : '-' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="spinner-container" *ngIf="loading">
+      <div class="spinner"></div>
+    </div>
+  </div>
+</div>

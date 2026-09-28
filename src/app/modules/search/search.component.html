@@ -1,0 +1,149 @@
+<div class="content">
+  <div class="page-header">
+    <h1 class="page-title">Buscador</h1>
+    <p class="page-subtitle">Busca estudiantes y consulta sus cursos</p>
+  </div>
+  <div class="search-toolbar">
+    <input
+      type="text"
+      class="search-bar"
+      placeholder="Buscar..."
+      [(ngModel)]="searchTerm"
+    />
+    <button
+      class="button-detail btn-search"
+      [disabled]="buttonSearchDisabled"
+      [ngClass]="{'disabled-button': buttonSearchDisabled}"
+      (click)="searchUsers()"
+    >
+      Buscar
+    </button>
+    <button
+      class="button-detail btn-clear"
+      [disabled]="!buttonSearchDisabled"
+      (click)="clear()"
+    >
+      Limpiar
+    </button>
+  </div>
+
+  <div class="spinner-container" *ngIf="loading">
+    <div class="spinner"></div>
+  </div>
+  <div *ngFor="let person of persons" class="persons-view">
+    <div class="person-image">
+      <i class="bx bx-user" aria-hidden="true"></i>
+    </div>
+    <div class="person-details">
+      <span class="person-name">{{ person.memb_name }}</span>
+      <span>{{ person.memb_surname }}</span>
+    </div>
+    <div class="button-container">
+      <button
+        class="button-detail"
+        [class.selected]="person.memb_id === selectedPersonId"
+        [disabled]="buttonsDisabled"
+        (click)="verCursos(person.memb_id)"
+      >
+        Ver Cursos
+      </button>
+    </div>
+  </div>
+
+  <div
+    class="table-container"
+    *ngIf="
+      (dataSource && loadingTable == true) ||
+        (dataSource && loadingTable == false && dataSource.data.length > 0);
+      else noDataMessage
+    "
+  >
+    <table mat-table [dataSource]="dataSource" class="custom-mat-table">
+      <ng-container matColumnDef="period">
+        <th mat-header-cell *matHeaderCellDef class="th-column">Periodo</th>
+        <td mat-cell *matCellDef="let element" class="td-column">
+          {{ element.stud_season.seas_period.peri_description }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="course">
+        <th mat-header-cell *matHeaderCellDef class="th-column">Curso</th>
+        <td mat-cell *matCellDef="let element" class="td-column">
+          {{ element.stud_season.seas_course.cour_description }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="teacher">
+        <th mat-header-cell *matHeaderCellDef class="th-column">Profesor</th>
+        <td mat-cell *matCellDef="let element" class="td-column">
+          {{
+            element.stud_season.seas_teacher.memb_name +
+              " " +
+              element.stud_season.seas_teacher.memb_surname
+          }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="mode">
+        <th mat-header-cell *matHeaderCellDef class="th-column">Modo</th>
+        <td mat-cell *matCellDef="let element" class="td-column">
+          <ng-container
+            *ngIf="element.stud_season.seas_mode.mode_name === 'Virtual'"
+          >
+            <span class="icon-with-text">
+              <i class="bx bxl-zoom icon"></i> Virtual
+            </span>
+          </ng-container>
+          <ng-container
+            *ngIf="element.stud_season.seas_mode.mode_name === 'Online'"
+          >
+            <span class="icon-with-text">
+              <i class="bx bx-desktop icon"></i>
+              Online
+            </span>
+          </ng-container>
+          <ng-container
+            *ngIf="element.stud_season.seas_mode.mode_name === 'Presencial'"
+          >
+            <span class="icon-with-text">
+              <i class="bx bx-user icon"></i>
+              Presencial
+            </span>
+          </ng-container>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="note">
+        <th mat-header-cell *matHeaderCellDef class="th-column">Nota</th>
+        <td mat-cell *matCellDef="let element" class="td-column">
+          <div
+            class="nota-circle"
+            [ngClass]="{
+              aprobado: element.seas_final >= 13,
+              reprobado: element.seas_final < 13 && element.seas_final !== null,
+              none: element.seas_final === null
+            }"
+          >
+            {{ element.seas_final !== null ? element.seas_final : "None" }}
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <div class="spinner-container" *ngIf="loadingTable">
+      <div class="spinner"></div>
+    </div>
+
+    <mat-paginator
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 15, 20]"
+    ></mat-paginator>
+  </div>
+
+  <ng-template #noDataMessage>
+    <p class="no-data-message">No hay datos seleccionados.</p>
+  </ng-template>
+</div>

@@ -1,0 +1,15 @@
+<div
+  mat-dialog-content
+  class="main-content"
+>
+  <h2 mat-dialog-title class="title">Confirmación</h2>
+  <mat-dialog-content class="subtitle">
+    ¿Estás seguro de que deseas inscribirte en este curso?
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="false" class="button-detail" (click)="onCancel()">Cancelar</button>
+    <button mat-button [mat-dialog-close]="true" class="button-detail" (click)="onConfirm()" cdkFocusInitial>
+      Aceptar
+    </button>
+  </mat-dialog-actions>
+</div>

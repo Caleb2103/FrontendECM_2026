@@ -1,0 +1,31 @@
+<nav class="sidebar" aria-label="Navegación principal" [ngClass]="{ collapsed: collapsed, 'mobile-visible': mobileOpen }">
+  <div class="sidebar__logo">
+    <span class="sidebar__logo-mark"><i class="bx bxs-book-bookmark"></i></span>
+    <span class="sidebar__logo-text" *ngIf="!collapsed">ECM</span>
+  </div>
+
+  <button
+    class="sidebar__collapse-btn"
+    type="button"
+    (click)="toggleSidebar()"
+    [attr.aria-label]="collapsed ? 'Expandir menú' : 'Colapsar menú'"
+    [attr.aria-expanded]="!collapsed"
+  >
+    <i class="bx" [ngClass]="collapsed ? 'bx-chevron-right' : 'bx-chevron-left'"></i>
+  </button>
+
+  <ul class="sidenav-nav">
+    <li class="sidenav-nav-item" *ngFor="let data of filteredNavbarItems">
+      <a
+        class="sidenav-nav-link"
+        [routerLink]="[data.routerLink]"
+        routerLinkActive="active"
+        [attr.aria-label]="collapsed ? data.label : null"
+        (click)="onNavItemClick()"
+      >
+        <i class="sidenav-link-icon" [class]="data.icon"></i>
+        <span class="sidenav-link-text" *ngIf="!collapsed">{{ data.label }}</span>
+      </a>
+    </li>
+  </ul>
+</nav>

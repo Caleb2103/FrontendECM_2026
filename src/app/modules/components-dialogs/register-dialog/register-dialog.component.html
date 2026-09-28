@@ -1,0 +1,31 @@
+<div class="modal-content scroll-container">
+  <div class="dialog-header">
+    <h2 class="welcome-heading">Bienvenido</h2>
+    <button class="close-button" (click)="onClose()" aria-label="Cerrar">
+      <i class='bx bx-x'></i>
+    </button>
+  </div>
+  <h3 class="course-heading">
+    Selecciona los cursos que has llevado en la ECM:
+  </h3>
+  <ul class="course-list">
+    <li *ngFor="let curso of cursos">
+      <label>
+        <span class="course-description">{{ curso.cour_description }}</span>
+        <input
+          type="checkbox"
+          [checked]="cursosSeleccionados.includes(curso)"
+          class="checkbox-input"
+          (change)="toggleCurso(curso)"
+        />
+      </label>
+    </li>
+  </ul>
+  <div class="checkbox-container">
+    <input type="checkbox" [value]="false" class="checkbox-input" />
+    <span class="course-description">No he llevado cursos</span>
+  </div>
+  <div class="button-div">
+    <button class="button-detail" (click)="register()">Submit</button>
+  </div>
+</div>

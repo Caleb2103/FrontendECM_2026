@@ -1,0 +1,282 @@
+.students-dialog-container {
+  font-family: var(--font-family-base);
+  width: 100%;
+}
+
+/* Header */
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 2rem;
+  color: var(--color-text);
+}
+
+.header-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.header-info > i {
+  font-size: 36px;
+  color: var(--color-text);
+}
+
+.header-text {
+  flex: 1;
+}
+
+.dialog-title {
+  font-family: var(--font-family-heading);
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 0.3rem 0;
+  color: var(--color-text);
+}
+
+.dialog-subtitle {
+  font-family: var(--font-family-base);
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+  opacity: 0.9;
+  color: var(--color-text);
+}
+
+.close-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--color-text);
+  transition: background-color 0.2s;
+}
+
+.close-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Students Count */
+.students-count {
+  font-family: var(--font-family-base);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background-color: var(--color-page-bg);
+  border-bottom: 1px solid var(--color-border);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.students-count i {
+  font-size: 20px;
+  color: var(--color-primary);
+}
+
+/* Students List */
+.students-list {
+  font-family: var(--font-family-base);
+  padding: 1rem 2rem;
+}
+
+.student-card {
+  font-family: var(--font-family-base);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem;
+  margin-bottom: 0.75rem;
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.student-info {
+  font-family: var(--font-family-base);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.student-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.student-avatar i {
+  font-size: 32px;
+  color: var(--color-text);
+}
+
+.student-details {
+  flex: 1;
+}
+
+.student-name {
+  font-family: var(--font-family-base);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 0.5rem 0;
+}
+
+.student-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.meta-item i {
+  font-size: 16px;
+  color: var(--color-primary);
+}
+
+/* Actions */
+.student-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.action-btn {
+  font-family: var(--font-family-base);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.action-btn i {
+  font-size: 18px;
+}
+
+.btn-transfer {
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.btn-transfer:hover {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.btn-cancel {
+  background-color: var(--color-danger-soft);
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+}
+
+.btn-cancel:hover {
+  background-color: var(--color-danger);
+  color: white;
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  color: var(--color-text-muted);
+}
+
+.empty-state i {
+  font-size: 64px;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Scrollbar */
+.students-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.students-list::-webkit-scrollbar-track {
+  background: var(--color-border);
+}
+
+.students-list::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 3px;
+}
+
+.students-list::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dialog-header {
+    padding: 1rem 1.5rem;
+  }
+
+  .dialog-title {
+    font-size: 18px;
+  }
+
+  .students-count {
+    padding: 0.75rem 1.5rem;
+  }
+
+  .students-list {
+    padding: 0.75rem 1.5rem;
+  }
+
+  .student-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .student-actions {
+    width: 100%;
+  }
+
+  .action-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .action-btn span {
+    display: none;
+  }
+}

@@ -1,0 +1,42 @@
+.layout {
+  min-height: 100vh;
+  background: var(--color-page-bg);
+}
+
+/* Reserva el espacio del sidebar fijo. Única fuente de verdad del layout:
+   ninguna página debe volver a declarar margin-left para esto. */
+.layout__main {
+  margin-left: var(--sidebar-width);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.25s ease;
+}
+
+.layout__main--collapsed {
+  margin-left: var(--sidebar-width-collapsed);
+}
+
+.layout--guest .layout__main {
+  margin-left: 0;
+}
+
+.layout__content {
+  flex: 1;
+}
+
+.layout__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  z-index: 90;
+}
+
+/* Mobile: el sidebar pasa a ser un drawer flotante, el contenido siempre
+   ocupa el ancho completo sin importar el estado de isCollapsed. */
+@media (max-width: 768px) {
+  .layout__main,
+  .layout__main--collapsed {
+    margin-left: 0;
+  }
+}
