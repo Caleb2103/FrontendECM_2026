@@ -145,7 +145,7 @@ input:focus {
   width: 100%;
   padding: 13px 20px;
   margin: 0.5rem 0;
-  background-color: red;
+  background-color: var(--color-primary);
   color: white;
   border: none;
   cursor: pointer;
