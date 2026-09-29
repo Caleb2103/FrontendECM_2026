@@ -40,8 +40,10 @@ export class StudentService {
     return this.http.get<any>(url).pipe(retry(2));
   }
 
-  getStudentActivePeriodList(): Observable<Student[]> {
-    const url = `${this.basePath}/student/period`;
+  // Sin periodo_id devuelve los alumnos del periodo activo
+  getStudentActivePeriodList(periodo_id?: number): Observable<Student[]> {
+    const query = periodo_id != null ? `?periodo=${periodo_id}` : '';
+    const url = `${this.basePath}/student/period${query}`;
     return this.http.get<Student[]>(url).pipe(retry(2));
   }
 

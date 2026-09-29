@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
-import { Student } from 'src/app/models/student';
+import { Subscription } from 'rxjs';
+import { Period, Student } from 'src/app/models/student';
+import { PeriodService } from 'src/app/services/period.service';
 import { StudentService } from 'src/app/services/student.service';
 
 @Component({
@@ -8,7 +10,7 @@ import { StudentService } from 'src/app/services/student.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   loading = true;
   chartLoading = false;
 
@@ -43,7 +45,6 @@ export class DashboardComponent implements OnInit {
   cursoChart: ChartData<'bar'> = { labels: [], datasets: [] };
   modalidadChart: ChartData<'bar'> = { labels: [], datasets: [] };
   seasonApprovalChart: ChartData<'bar'> = { labels: [], datasets: [] };
-
   baseOptions: ChartOptions<'bar'> = {
     responsive: true,
     maintainAspectRatio: false,
@@ -128,16 +129,25 @@ export class DashboardComponent implements OnInit {
     },
   };
 
-  constructor(private studentService: StudentService) {}
+  private studentsSub?: Subscription;
+
+  constructor(
+    private studentService: StudentService,
+    private periodService: PeriodService,
+  ) {}
 
   ngOnInit(): void {
-    this.studentService.getStudentActivePeriodList().subscribe({
-      next: (students: Student[]) => {
-        this.allStudents = students;
-        this.extractPeriods(students);
-        this.extractFilterOptions(students);
+    this.periodService.getPeriodList().subscribe({
+      next: (periods: Period[]) => {
+        this.availablePeriods = periods
+          // El periodo "Declarativa" no es un ciclo real, no tiene estadísticas
+          .filter(p => !p.peri_description?.toLowerCase().includes('declarativa'))
+          .map(p => ({ id: p.peri_id, description: p.peri_description, status: p.peri_status }))
+          .sort((a, b) => b.description.localeCompare(a.description));
+        const active = this.availablePeriods.find(p => p.status);
+        this.selectedPeriodId = active?.id ?? (this.availablePeriods[0]?.id ?? 0);
         if (this.selectedPeriodId) {
-          this.applyFilters(true);
+          this.loadStudents(true);
         } else {
           this.loading = false;
         }
@@ -146,17 +156,25 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  private extractPeriods(students: Student[]): void {
-    const map = new Map<number, { id: number; description: string; status: boolean }>();
-    students.forEach(s => {
-      const p = s.stud_season?.seas_period;
-      if (p && !map.has(p.peri_id)) {
-        map.set(p.peri_id, { id: p.peri_id, description: p.peri_description, status: p.peri_status });
-      }
+  ngOnDestroy(): void {
+    this.studentsSub?.unsubscribe();
+  }
+
+  private loadStudents(isInitial = false): void {
+    if (!isInitial) this.chartLoading = true;
+    // Cancela una carga previa si el usuario cambia de ciclo rápido
+    this.studentsSub?.unsubscribe();
+    this.studentsSub = this.studentService.getStudentActivePeriodList(this.selectedPeriodId).subscribe({
+      next: (students: Student[]) => {
+        this.allStudents = students;
+        this.extractFilterOptions(students);
+        this.applyFilters(isInitial);
+      },
+      error: () => {
+        this.allStudents = [];
+        this.applyFilters(isInitial);
+      },
     });
-    this.availablePeriods = [...map.values()].sort((a, b) => b.description.localeCompare(a.description));
-    const active = this.availablePeriods.find(p => p.status);
-    this.selectedPeriodId = active?.id ?? (this.availablePeriods[0]?.id ?? 0);
   }
 
   private extractFilterOptions(students: Student[]): void {
@@ -178,11 +196,10 @@ export class DashboardComponent implements OnInit {
 
   private getFilteredStudents(): Student[] {
     return this.allStudents.filter(s => {
-      const periodOk = s.stud_season?.seas_period?.peri_id === this.selectedPeriodId;
       const modOk = !this.selectedModalidad || s.stud_season?.seas_mode?.mode_name === this.selectedModalidad;
       const turnoOk = !this.selectedTurno || s.stud_season?.seas_schedule?.sche_description === this.selectedTurno;
       const zonaOk = !this.selectedZona || s.stud_member?.memb_zone?.zone_name === this.selectedZona;
-      return periodOk && modOk && turnoOk && zonaOk;
+      return modOk && turnoOk && zonaOk;
     });
   }
 
@@ -190,7 +207,7 @@ export class DashboardComponent implements OnInit {
     this.selectedModalidad = '';
     this.selectedTurno = '';
     this.selectedZona = '';
-    this.applyFilters();
+    this.loadStudents();
   }
 
   onModalidadChange(): void {

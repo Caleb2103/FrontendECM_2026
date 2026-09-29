@@ -19,4 +19,9 @@ export class SeasonService {
     const url = `${this.basePath}/list/${user_id}`;
     return this.http.get<Season[]>(url).pipe(retry(2));
   }
+
+  updateSeasonStatus(seasonId: number, status: boolean): Observable<{ seas_status: boolean }> {
+    const url = `${this.basePath}/status/${seasonId}`;
+    return this.http.patch<{ seas_status: boolean }>(url, { seas_status: status });
+  }
 }

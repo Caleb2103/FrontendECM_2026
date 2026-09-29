@@ -70,6 +70,17 @@
                 <span class="course-title">{{ courseGroup.key }}</span>
               </div>
               <div class="course-actions">
+                <button
+                  class="status-badge"
+                  [ngClass]="courseGroup.seas_status ? 'status-open' : 'status-closed'"
+                  [disabled]="updatingStatus.has(courseGroup.seas_id)"
+                  (click)="toggleSeasonStatus(courseGroup)"
+                  [title]="courseGroup.seas_status ? 'Clic para cerrar el curso' : 'Clic para abrir el curso'"
+                  [attr.aria-label]="(courseGroup.seas_status ? 'Cerrar ' : 'Abrir ') + courseGroup.key"
+                >
+                  <i class='bx' [ngClass]="courseGroup.seas_status ? 'bx-lock-open-alt' : 'bx-lock-alt'"></i>
+                  {{ courseGroup.seas_status ? 'Abierto' : 'Cerrado' }}
+                </button>
                 <span class="student-count">{{ courseGroup.students.length }} estudiante(s)</span>
                 <button class="btn-download-course" (click)="exportCourseStudents(courseGroup, modeGroup.mode_name)" title="Descargar lista Excel" [attr.aria-label]="'Descargar lista de ' + courseGroup.key">
                   <i class='bx bx-download'></i>

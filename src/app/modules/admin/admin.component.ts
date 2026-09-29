@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { Course, Schedule, Student } from 'src/app/models/student';
 import { StudentService } from 'src/app/services/student.service';
+import { SeasonService } from 'src/app/services/season.service';
 import { CourseStudentsDialogComponent } from '../components-dialogs/course-students-dialog/course-students-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import * as XLSX from 'xlsx';
 
 export interface GroupedStudents {
@@ -15,6 +17,8 @@ export interface CourseGroup {
   key: string;
   schedule: Schedule;
   course: Course;
+  seas_id: number;
+  seas_status: boolean;
   students: Student[];
 }
 
@@ -32,8 +36,15 @@ export class AdminComponent {
   groupedStudents: GroupedStudents[] = [];
 
   loading: boolean = false;
+  // seas_id de las secciones cuyo estado se está guardando
+  updatingStatus = new Set<number>();
 
-  constructor (private studentService: StudentService, private dialog: MatDialog) {}
+  constructor (
+    private studentService: StudentService,
+    private seasonService: SeasonService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
+  ) {}
 
   ngOnInit(): void {
     this.getData();
@@ -97,6 +108,8 @@ export class AdminComponent {
           key: courseKey,
           schedule: schedule,
           course: course,
+          seas_id: student.stud_season.seas_id,
+          seas_status: student.stud_season.seas_status,
           students: []
         };
         modeGroup.courses.push(courseGroup);
@@ -106,6 +119,46 @@ export class AdminComponent {
     });
 
     this.groupedStudents = Array.from(modeMap.values());
+  }
+
+  toggleSeasonStatus(courseGroup: CourseGroup): void {
+    const newStatus = !courseGroup.seas_status;
+    const action = newStatus ? 'abrir' : 'cerrar';
+
+    const confirmSnackBar = this.snackBar.open(
+      `¿Seguro que deseas ${action} ${courseGroup.key}?`,
+      'Confirmar',
+      {
+        duration: 5000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+      }
+    );
+
+    confirmSnackBar.onAction().subscribe(() => {
+      this.updatingStatus.add(courseGroup.seas_id);
+      this.seasonService.updateSeasonStatus(courseGroup.seas_id, newStatus).subscribe({
+        next: (res) => {
+          courseGroup.seas_status = res.seas_status;
+          courseGroup.students.forEach(s => s.stud_season.seas_status = res.seas_status);
+          this.updatingStatus.delete(courseGroup.seas_id);
+          this.snackBar.open(`Curso ${res.seas_status ? 'abierto' : 'cerrado'} exitosamente`, 'Cerrar', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+          });
+        },
+        error: (error) => {
+          console.error('Error al actualizar el estado:', error);
+          this.updatingStatus.delete(courseGroup.seas_id);
+          this.snackBar.open('Error al actualizar el estado del curso', 'Cerrar', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+          });
+        }
+      });
+    });
   }
 
   getAccordionId(modeId: number): string {
