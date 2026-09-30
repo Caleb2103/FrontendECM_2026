@@ -47,7 +47,7 @@
 
     <div class="form-actions">
       <button class="btn-secondary" type="button" (click)="volver()">Cancelar</button>
-      <button class="btn-primary" type="button" [disabled]="!isValid() || saving" (click)="guardar()">
+      <button class="btn-primary" type="button" [disabled]="loading || !isValid() || saving" (click)="guardar()">
         {{ saving ? 'Guardando...' : 'Guardar cambios' }}
       </button>
     </div>

@@ -18,6 +18,7 @@ export const ZONAS = [
 })
 export class ProfileComponent implements OnInit {
   zonas = ZONAS;
+  loading = true;
   saving = false;
 
   memberId: number | null = null;
@@ -35,36 +36,43 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadFromCache();
+    // Limpia el caché que guardaban versiones anteriores del login
+    localStorage.removeItem('member');
+
+    const idRaw = localStorage.getItem('userId');
+    this.memberId = idRaw ? parseInt(idRaw, 10) : null;
+    if (this.memberId) {
+      this.loadMember(this.memberId);
+    } else {
+      this.loading = false;
+    }
   }
 
-  /**
-   * No existe un endpoint para obtener el perfil por id, así que se
-   * precarga con la respuesta de login que quedó cacheada en localStorage.
-   * Si el usuario inició sesión antes de este cambio, el caché no existirá
-   * y el formulario simplemente arranca vacío (salvo nombre/id).
-   */
-  private loadFromCache(): void {
-    const raw = localStorage.getItem('member');
-    if (!raw) {
-      this.nombres = localStorage.getItem('name') ?? '';
-      const idRaw = localStorage.getItem('userId');
-      this.memberId = idRaw ? parseInt(idRaw, 10) : null;
-      return;
-    }
+  private loadMember(memberId: number): void {
+    this.loading = true;
+    this.memberService.getMember(memberId).subscribe({
+      next: (member) => {
+        this.setForm(member);
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+        this.snackBar.open('No se pudo cargar el perfil.', 'Cerrar', {
+          duration: 4000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+        });
+      },
+    });
+  }
 
-    try {
-      const member: Member = JSON.parse(raw);
-      this.memberId = member.memb_id;
-      this.dni = member.memb_dni ?? '';
-      this.nombres = member.memb_name ?? '';
-      this.apellidos = member.memb_surname ?? '';
-      this.celular = member.memb_mobil ?? '';
-      this.fechaNacimiento = member.birthdate ?? '';
-      this.zona = member.memb_zone?.zone_name ?? '';
-    } catch {
-      // Caché corrupto: se ignora y el formulario arranca vacío.
-    }
+  private setForm(member: Member): void {
+    this.dni = member.memb_dni ?? '';
+    this.nombres = member.memb_name ?? '';
+    this.apellidos = member.memb_surname ?? '';
+    this.celular = member.memb_mobil ?? '';
+    this.fechaNacimiento = member.birthdate ?? '';
+    this.zona = member.memb_zone?.zone_name ?? '';
   }
 
   isValid(): boolean {
@@ -92,19 +100,11 @@ export class ProfileComponent implements OnInit {
     };
 
     this.memberService.updateMember(this.memberId, payload).subscribe({
-      next: () => {
+      next: (member) => {
         this.saving = false;
-        // Refresca el caché local para que header/sidebar reflejen el cambio.
-        localStorage.setItem('name', payload.memb_name);
-        const raw = localStorage.getItem('member');
-        if (raw) {
-          try {
-            const member = JSON.parse(raw);
-            localStorage.setItem('member', JSON.stringify({ ...member, ...payload }));
-          } catch {
-            // Ignorado: el caché seguirá desactualizado hasta el próximo login.
-          }
-        }
+        this.setForm(member);
+        // Header y menú leen el nombre de aquí
+        localStorage.setItem('name', member.memb_name);
         this.snackBar.open('Perfil actualizado correctamente', 'Cerrar', {
           duration: 3000,
           horizontalPosition: 'center',

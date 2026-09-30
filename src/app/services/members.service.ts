@@ -34,15 +34,12 @@ export class MemberService {
       .pipe(retry(2));
   }
 
-  /**
-   * Actualiza los datos personales de un miembro.
-   * NOTA: este endpoint sigue la misma convención REST que
-   * StudentService.updateStudent (`/student/update/{id}`), pero no hay
-   * hoy un endpoint de "actualizar miembro" ya en uso en el resto del
-   * código — falta confirmar con backend que `PUT /members/update/{id}`
-   * exista con esa forma antes de dar el flujo de Perfil por probado.
-   */
-  updateMember(memberId: number, personalData: any): Observable<any> {
-    return this.http.put<any>(`${this.basePath}/update/${memberId}`, personalData);
+  getMember(memberId: number): Observable<Member> {
+    return this.http.get<Member>(`${this.basePath}/detail/${memberId}`).pipe(retry(2));
+  }
+
+  /** Actualiza los datos personales (nombre, apellido, celular, nacimiento, zona). */
+  updateMember(memberId: number, personalData: any): Observable<Member> {
+    return this.http.put<Member>(`${this.basePath}/update/${memberId}`, personalData);
   }
 }

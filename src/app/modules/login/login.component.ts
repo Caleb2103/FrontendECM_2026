@@ -33,9 +33,6 @@ export class LoginComponent {
           localStorage.setItem('userId', response[0].memb_id);
           localStorage.setItem('name', response[0].memb_name);
           localStorage.setItem('userRole', response[0].memb_role);
-          // Se guarda el registro completo para poder precargar la
-          // página de Perfil sin necesitar un endpoint aparte.
-          localStorage.setItem('member', JSON.stringify(response[0]));
           this.authService.setLoggedIn(true);
 
           const isMobile = this.isMobileDevice();
